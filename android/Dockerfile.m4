@@ -71,12 +71,13 @@ RUN sudo mkdir -p ${android_home} && \
     rm /tmp/${sdk_version}
 
 # Download and install Android NDK
+ARG path_to_extracted_ndk=/tmp/extracted_ndk
 RUN sudo mkdir -p ${android_ndk_home} && \
     sudo chown -R circleci:circleci ${android_ndk_home} && \
     curl --silent --show-error --location --fail --retry 3 --output  /tmp/${ndk_version} https://dl.google.com/android/repository/${ndk_version} && \
-    unzip -q /tmp/${ndk_version} -d ${android_ndk_home} && \
-    mv ${android_ndk_home}/${ndk_version}/* ${android_ndk_home}/ && rmdir ${android_ndk_home}/${ndk_version} && \
-    rm /tmp/${ndk_version}
+    unzip -q /tmp/${ndk_version} -d ${path_to_extracted_ndk} && \
+    mv ${path_to_extracted_ndk}/*/* ${android_ndk_home}/ && \
+    rm /tmp/${ndk_version} && rm -r ${path_to_extracted_ndk}
 
 # Set environmental variables
 ENV ANDROID_HOME ${android_home}
